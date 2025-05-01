@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: "postgres-dev"
+    image: "postgres:16.0-alpine3.18"
+    env_file:
+      - ../.env.development
+    ports:
+      - "5432:5432"
+      
+    networks:
+      - postgres-dev-network
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - postgres-dev-network
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - postgres-dev-network
+
+networks:
+  postgres-dev-network:
